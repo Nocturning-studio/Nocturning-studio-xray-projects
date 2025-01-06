@@ -24,9 +24,7 @@ GBufferPacked main (Interpolators Input)
 	float4 BaseTextureData = tex2D (s_base, Input.UV);
     GBuffer.Albedo = 2.0f * BaseTextureData.rgb * tex2D(s_detail, Input.DetailUV).rgb;
 
-    GBuffer.AO = BaseTextureData.a * AO_BRIGHTNESS;
-
-    GBuffer.BackedAO = 1.0f;
+    GBuffer.AO = BaseTextureData.a;
 
     GBuffer.Normal = normalize (Input.Normal);
 

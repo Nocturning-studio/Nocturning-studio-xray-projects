@@ -204,17 +204,15 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     float V = Vis_SmithJoint(RoughnessSqr, NdotV, saturate(NdotL)) * saturate(NdotL) * (4.0f * HdotV / NdotH);
     Light.Specular = D * V * kS;
     
-#if USE_EON2_DIFFUSE && USE_ADVANCED_SHADING
-    Light.Diffuse = f_EON_Opt(Albedo, Roughness, NdotL, NdotV, LdotV) * NdotL * kD;
-#elif USE_OREN_NAYAR_DIFFUSE && USE_ADVANCED_SHADING
-    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo * kD / PI * 2.0f;
-#else
+#if DISABLE_SHADING
     Light.Diffuse = Albedo * NdotL * kD / PI * 2.0f;
+#else
+    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo * kD / PI * 2.0f;
 #endif
 
     // Fake effect of the light going through the thin foliage
-    float wrapNoL = saturate((-NdotL + 0.5f) / 2.25);
-    float scatter = D_GGX(0.36, saturate(-LdotV));
+    float wrapNoL = saturate((-NdotL + 0.5f) / 2.25f);
+    float scatter = D_GGX(0.36f, saturate(-LdotV));
     Light.Subsurface = wrapNoL * scatter;
 
     return Light;
@@ -269,12 +267,10 @@ LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallne
     float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
     float LdotH = dot(LightDirection, HalfWayDirection);
     
-#if USE_EON2_DIFFUSE && USE_ADVANCED_SHADING
-    Light.Diffuse = f_EON_Opt(Albedo, Roughness, NdotL, NdotV, LdotV) * NdotL;
-#elif USE_OREN_NAYAR_DIFFUSE && USE_ADVANCED_SHADING
-    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo / PI;
+#if DISABLE_SHADING
+    Light.Diffuse = Albedo * NdotL / PI * 2.0f;
 #else
-    Light.Diffuse = Albedo * NdotL / PI;
+    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo / PI * 2.0f;
 #endif
 
     Light.Specular = NULL;

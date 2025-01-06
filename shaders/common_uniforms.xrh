@@ -88,4 +88,7 @@ uniform float2 parallax_height;
 
 uniform float3 sun_dir;
 uniform float3 sun_color;
+
+uniform float4 ambient_color;
+uniform float ao_brightness;
 ////////////////////////////////////////////////////////////////////////////

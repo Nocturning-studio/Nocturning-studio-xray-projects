@@ -15,6 +15,7 @@
 #include "parallax_shadows.xrh"
 #include "gbuffer.xrh"
 #include "ao_from_height.xrh"
+#include "lightmap.xrh"
 ////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
@@ -45,7 +46,7 @@ GBufferPacked main (Interpolators Input)
 	// Choose displacement type and calculate UV displacement
     float2 DetailUV = Input.DetailUV;
 	
-#if !(MATERIAL_QUALITY == FLAT_MATERIALS)
+#if !(MATERIAL_QUALITY == FLAT_MATERIALS) && !(DISABLE_SHADING)
 	DetailUV = GetTerrainDisplacement(Input.Position, ViewVector, Input.DetailUV, BlendMask, TERRAIN_MATERIAL);
 #endif	
 
@@ -53,7 +54,7 @@ GBufferPacked main (Interpolators Input)
     float3 DetailAlbedo = GetTerrainDetailAlbedo(BlendMask, DetailUV);
     GBuffer.Albedo = 2.0f * Albedo * DetailAlbedo;
 
-#if MATERIAL_QUALITY == FLAT_MATERIALS
+#if MATERIAL_QUALITY == FLAT_MATERIALS || DISABLE_SHADING
 	GBuffer.Normal = normalize (mul (TBN, float3(0.0f, 0.0f, 1.0f)));
 	
     GBuffer.Roughness = 1.0f;
@@ -92,10 +93,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer.Position = Input.Position;
 	
 	// Get light map ambient
-    GBuffer.AO = tex2D(s_base, Input.UV).a * AO_BRIGHTNESS;
-
-	// Get baked ao from details
-    GBuffer.BackedAO = AOfromHeight(DetailUV, Input.Position.z, BlendMask);
+    GBuffer.AO = Fix_AO(tex2D(s_base, Input.UV).a) * AOfromHeight(DetailUV, Input.Position.z, BlendMask);
 	
 	GBuffer.Metallness = 0.0f;
 

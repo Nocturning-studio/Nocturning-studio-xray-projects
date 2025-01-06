@@ -5,6 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 #include "gbuffer.xrh"
+#include "lightmap.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
@@ -36,9 +37,7 @@ GBufferPacked main (Interpolators Input)
 	float4 NormalAndAO1 = tex2D (s_hemi, Input.TexCoords1);
 	float4 NormalAndAO = lerp (NormalAndAO0, NormalAndAO1, Input.TransitionFactor);
 
-    GBuffer.AO = NormalAndAO.a * AO_BRIGHTNESS;
-
-    GBuffer.BackedAO = 1.0f;
+    GBuffer.AO = Fix_AO(NormalAndAO.a);
     
     GBuffer.Normal = -normalize (NormalAndAO.rgb);
 

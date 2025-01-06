@@ -43,11 +43,11 @@ GBufferPacked main (Interpolators Input)
 	
 #ifdef USE_LIGHTMAP
 	GBuffer.AO = Unpack_LightMap(Input.LightMapUV);
-#else//USE_LIGHTMAP
-    GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS;
-#endif//USE_LIGHTMAP
+#else
+    GBuffer.AO = Input.Lighting.x;
+#endif
 	
-    GBuffer.BackedAO = Material.AO;
+    GBuffer.AO = Fix_AO(GBuffer.AO) * Material.AO;
 
     GBuffer.Roughness = Material.Roughness;
 

@@ -9,7 +9,6 @@
 #include "BRDF.xrh"
 ////////////////////////////////////////////////////////////////////////////
 uniform float debug_mode;
-uniform float4 ambient_color;
 ////////////////////////////////////////////////////////////////////////////
 float4 main(float2 TexCoords : TEXCOORD0, float2 Pos2D: VPOS): COLOR0
 {
@@ -25,9 +24,7 @@ float4 main(float2 TexCoords : TEXCOORD0, float2 Pos2D: VPOS): COLOR0
     
     // Get ambient
     float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
-    float LightMapAO = saturate(GBuffer.AO * 2.0f * ambient_color.a + 0.025f);
-    float BackedAO = GBuffer.BackedAO;
-    float Ambient = LightMapAO * RealTimeAO * BackedAO;
+    float Ambient = RealTimeAO * GBuffer.AO;
     
     // Get coords for Irradiance
     float3 IrradianceCoords = RemapCubeCoords(WorldSpaceNormal);
@@ -35,7 +32,7 @@ float4 main(float2 TexCoords : TEXCOORD0, float2 Pos2D: VPOS): COLOR0
     // Get mip level, corellated with roughness
     float MipLevel = getMipLevelFromRoughness(RoughnessSqr, 8.0f);
     
-#ifdef USE_ADVANCED_SHADING
+#ifndef DISABLE_SHADING
     // Get F0 
     float3 F0 = 0.04f;
     F0 = lerp(F0, GBuffer.Albedo, GBuffer.Metallness);
@@ -123,14 +120,9 @@ float4 main(float2 TexCoords : TEXCOORD0, float2 Pos2D: VPOS): COLOR0
             SceneColor = GBuffer.EmissionPower;
             SceneColor = pow(abs(SceneColor), 2.2f);
         }
-        else if (debug_mode == GBUFFER_LIGHTMAP_AO)
+        else if (debug_mode == GBUFFER_LIGHTMAP_AO || debug_mode == GBUFFER_BAKED_AO)
         {
-            SceneColor = LightMapAO;
-            SceneColor = pow(abs(SceneColor), 2.2f);
-        }
-        else if (debug_mode == GBUFFER_BAKED_AO)
-        {
-            SceneColor = BackedAO;
+            SceneColor = GBuffer.AO;
             SceneColor = pow(abs(SceneColor), 2.2f);
         }
         else if (debug_mode == DIRECT_LIGHT)

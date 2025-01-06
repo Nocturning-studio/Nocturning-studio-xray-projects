@@ -7,6 +7,7 @@
 #include "gbuffer.xrh"
 #include "alpha_test.xrh"
 #include "contrast_adaptive_sharpening.xrh"
+#include "lightmap.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
@@ -27,9 +28,7 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.Albedo = BaseTextureData.rgb;
 	
-    GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS;
-
-    GBuffer.BackedAO = 1.0f;
+    GBuffer.AO = Fix_AO(Input.Lighting.x);
 
     GBuffer.Normal = normalize(cross(ddx(Input.Position), ddy(Input.Position)));
 

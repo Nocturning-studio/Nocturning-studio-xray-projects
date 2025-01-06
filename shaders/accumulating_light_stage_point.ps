@@ -32,8 +32,11 @@ float4 main (Interpolators Input): COLOR0
     float NdotL = abs(dot(normalize(GBuffer.Normal), LightDirection.rgb));
     if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
         ShadowMap *= TraceShadow(LightDirection, Position.xyz);
-    
+ #ifndef DISABLE_SHADING
     LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, LightDirection);
+ #else
+    LightComponents Light = Calculate_Diffuse_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, LightDirection);
+ #endif
 #else
     float ShadowMap = 1.0f;
     LightComponents Light = Calculate_Diffuse_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, LightDirection);
