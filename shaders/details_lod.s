@@ -1,5 +1,5 @@
 function l_special	(shader, t_base, t_second, t_detail)
-	shader:begin	("gbuffer_stage_multiple_object_billboard","gbuffer_stage_multiple_object_billboard")
+	shader:begin	("gbuffer_stage_multiple_usage_object_billboard","gbuffer_stage_multiple_usage_object_billboard")
 			: blend	(false, blend.one, blend.zero)
 			: zb	(true,  true)
 			: fog	(false)

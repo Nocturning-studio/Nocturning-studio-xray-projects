@@ -4,9 +4,9 @@
 // Pixel
 float4 main(v_shadow_direct_aref I) : COLOR
 {
-    float4 Tex = tex2D(s_base, I.tc0);
+    float Opacity = tex2D(s_base, I.tc0).a;
 	
-    calc_alpha_test(I.tc0, Tex.a);
+    calc_alpha_test(I.tc0, Opacity);
     
-    return Tex;
+    return NULL;
 }

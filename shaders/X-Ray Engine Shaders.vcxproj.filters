@@ -147,18 +147,6 @@
     <None Include="gbuffer_stage_dynamic_mesh.vs">
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Dynamic mesh</Filter>
     </None>
-    <None Include="gbuffer_stage_multiple_object.vs">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Hight quality geometry</Filter>
-    </None>
-    <None Include="gbuffer_stage_multiple_object_animated.vs">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Hight quality geometry</Filter>
-    </None>
-    <None Include="gbuffer_stage_multiple_object_billboard.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Low quality geometry %28Billboard%29</Filter>
-    </None>
-    <None Include="gbuffer_stage_multiple_object_billboard.vs">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Low quality geometry %28Billboard%29</Filter>
-    </None>
     <None Include="gbuffer_stage_particle.ps">
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Particle</Filter>
     </None>
@@ -182,30 +170,6 @@
     </None>
     <None Include="gbuffer_stage_terrain_lq.vs">
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Terrain %28Implicit lighted mesh%29\Low quality geometry</Filter>
-    </None>
-    <None Include="shadow_direct_dynamic_mesh.vs">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29</Filter>
-    </None>
-    <None Include="shadow_direct_dynamic_mesh_alphatest.vs">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29</Filter>
-    </None>
-    <None Include="shadow_direct_multiple_object.vs">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29</Filter>
-    </None>
-    <None Include="shadow_direct_multiple_object_animated.vs">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29</Filter>
-    </None>
-    <None Include="shadow_direct_static_mesh.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29</Filter>
-    </None>
-    <None Include="shadow_direct_static_mesh.vs">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29</Filter>
-    </None>
-    <None Include="shadow_direct_static_mesh_alphatest.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29</Filter>
-    </None>
-    <None Include="shadow_direct_static_mesh_alphatest.vs">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29</Filter>
     </None>
     <None Include="scene_combine_stage.ps">
       <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
@@ -666,6 +630,90 @@
     <None Include="debug_console.ps">
       <Filter>Forward rendering\Debug</Filter>
     </None>
+    <None Include="gbuffer_stage_multiple_usage_object.vs">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Hight quality geometry</Filter>
+    </None>
+    <None Include="gbuffer_stage_multiple_usage_object_animated.vs">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Hight quality geometry</Filter>
+    </None>
+    <None Include="gbuffer_stage_multiple_usage_object_billboard.ps">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Low quality geometry %28Billboard%29</Filter>
+    </None>
+    <None Include="gbuffer_stage_multiple_usage_object_billboard.vs">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Low quality geometry %28Billboard%29</Filter>
+    </None>
+    <None Include="depth_prepass_stage_detail_object.ps">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Detail object</Filter>
+    </None>
+    <None Include="depth_prepass_stage_detail_object.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Detail object</Filter>
+    </None>
+    <None Include="depth_prepass_stage_detail_object_animated.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Detail object</Filter>
+    </None>
+    <None Include="depth_prepass_stage_dynamic_mesh.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Dynamic mesh</Filter>
+    </None>
+    <None Include="depth_prepass_stage_dynamic_mesh_alphatest.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Dynamic mesh</Filter>
+    </None>
+    <None Include="depth_prepass_stage_multiple_usage_object.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Multiple usage object</Filter>
+    </None>
+    <None Include="depth_prepass_stage_multiple_usage_object_animated.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Multiple usage object</Filter>
+    </None>
+    <None Include="depth_prepass_stage_particle.ps">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Particle</Filter>
+    </None>
+    <None Include="depth_prepass_stage_particle.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Particle</Filter>
+    </None>
+    <None Include="depth_prepass_stage_static_mesh.ps">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Static mesh</Filter>
+    </None>
+    <None Include="depth_prepass_stage_static_mesh.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Static mesh</Filter>
+    </None>
+    <None Include="depth_prepass_stage_static_mesh_alphatest.ps">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Static mesh</Filter>
+    </None>
+    <None Include="depth_prepass_stage_static_mesh_alphatest.vs">
+      <Filter>Deffered rendering pipeline\Depth prepass stage\Static mesh</Filter>
+    </None>
+    <None Include="shadow_depth_stage_detail_object.ps">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Detail object</Filter>
+    </None>
+    <None Include="shadow_depth_stage_detail_object.vs">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Detail object</Filter>
+    </None>
+    <None Include="shadow_depth_stage_detail_object_animated.vs">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Detail object</Filter>
+    </None>
+    <None Include="shadow_depth_stage_dynamic_mesh.vs">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Dynamic mesh</Filter>
+    </None>
+    <None Include="shadow_depth_stage_dynamic_mesh_alphatest.vs">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Dynamic mesh</Filter>
+    </None>
+    <None Include="shadow_depth_stage_multiple_usage_object.vs">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Multiple usage object</Filter>
+    </None>
+    <None Include="shadow_depth_stage_multiple_usage_object_animated.vs">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Multiple usage object</Filter>
+    </None>
+    <None Include="shadow_depth_stage_static_mesh.ps">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Static mesh</Filter>
+    </None>
+    <None Include="shadow_depth_stage_static_mesh.vs">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Static mesh</Filter>
+    </None>
+    <None Include="shadow_depth_stage_static_mesh_alphatest.ps">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Static mesh</Filter>
+    </None>
+    <None Include="shadow_depth_stage_static_mesh_alphatest.vs">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Static mesh</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">
@@ -742,9 +790,6 @@
     </Filter>
     <Filter Include="Deffered rendering pipeline\Light accumulating stage\Helpers">
       <UniqueIdentifier>{4a5113ab-12e0-4347-a54b-b1f28c4be1b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Shadow casting geometry %28Shadow map depth buffer%29">
-      <UniqueIdentifier>{2e63090c-9768-47b4-bd3c-a04fa0021975}</UniqueIdentifier>
     </Filter>
     <Filter Include="Deffered rendering pipeline\Scene combine stage\Helpers">
       <UniqueIdentifier>{06a758a2-f9a9-448b-add6-1a454888dd2a}</UniqueIdentifier>
@@ -913,6 +958,39 @@
     </Filter>
     <Filter Include="Forward rendering\Debug">
       <UniqueIdentifier>{0a762b9a-d29f-441f-adcb-f6e1082d1ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Shadow depth stage">
+      <UniqueIdentifier>{2e63090c-9768-47b4-bd3c-a04fa0021975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Depth prepass stage">
+      <UniqueIdentifier>{5cdbb387-45b2-41da-a405-990bb3c8a7d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Depth prepass stage\Detail object">
+      <UniqueIdentifier>{5e339d46-81c9-4bad-8eeb-d5fc27e2e722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Depth prepass stage\Dynamic mesh">
+      <UniqueIdentifier>{5c3e777e-dd7b-4db2-bf57-54f4fcf94cdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Depth prepass stage\Multiple usage object">
+      <UniqueIdentifier>{3f2d1c6b-95f9-4bd8-8fd8-6d7f24481844}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Depth prepass stage\Particle">
+      <UniqueIdentifier>{086969a4-a248-4e6c-a9ec-b2f9bad73b7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Depth prepass stage\Static mesh">
+      <UniqueIdentifier>{b6a8b085-a084-40aa-ae39-fd070c818cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Detail object">
+      <UniqueIdentifier>{7c0049ea-b643-46fa-ae94-c95528c91ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Dynamic mesh">
+      <UniqueIdentifier>{e21a6f08-fb4f-4d00-8a3a-0dccfe77f70f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Multiple usage object">
+      <UniqueIdentifier>{73f3c0aa-18d2-4fda-8dcb-0182323a56ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Static mesh">
+      <UniqueIdentifier>{34a9c35f-3917-4adb-bb28-d800694f9d37}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

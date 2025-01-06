@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////////
-// Created: 25.10.2023
+////////////////////////////////////////////////////////////////////////////////
+// Created: 06.01.2025
 // Author: Deathman
 // Nocturning studio for NS Project X
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
 struct VertexData
@@ -15,9 +15,7 @@ struct Interpolators
 {
     float4 HomogeniousPosition : POSITION;
     float3 Position : TEXCOORD0;
-    float3 Normal : TEXCOORD3;
     float2 UV : TEXCOORD4;
-    float Lighting : TEXCOORD5;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 uniform float4 dir2D;
@@ -53,19 +51,10 @@ Interpolators main(VertexData Input)
 #endif
     
     pos = float4(pos.x + result.x, pos.y, pos.z + result.y, 1.0f);
-
-	// Normal in world coords
-    float3 norm;
-    norm.x = pos.x - m0.w;
-    norm.y = pos.y - m1.w + 0.75f; // avoid zero
-    norm.z = pos.z - m2.w;
-
-    Output.Position = mul(m_WV, pos);
+    
     Output.HomogeniousPosition = mul(m_WVP, pos);
-    Output.Normal = mul(m_WV, float4(normalize(norm), 1.0f));
+    Output.Position = mul(m_WV, pos);
     Output.UV = Input.Misc.xy * consts.xy;
-
-    Output.Lighting.x = c0.w;
 
     return Output;
 }

@@ -6,7 +6,7 @@ function normal		(shader, t_base, t_second, t_detail)
 end
 
 function l_special	(shader, t_base, t_second, t_detail)
-	shader:begin	("shadow_direct_dynamic_mesh", "selflight")
+	shader:begin	("shadow_depth_stage_dynamic_mesh", "selflight")
 			: zb 		(true,false)
 			: fog		(false)
 			: emissive 	(true)
