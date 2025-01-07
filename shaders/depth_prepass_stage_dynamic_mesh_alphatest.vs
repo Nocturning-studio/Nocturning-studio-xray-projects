@@ -9,7 +9,8 @@
 struct Interpolators
 {
     float4 HomogeniousPosition : POSITION;
-    float2 UV : TEXCOORD2;
+    float3 Position : TEXCOORD0;
+    float2 UV : TEXCOORD1;
 };
 ////////////////////////////////////////////////////////////////////////////////
 Interpolators _main(v_model Input)
@@ -17,6 +18,7 @@ Interpolators _main(v_model Input)
     Interpolators Output;
     
     Output.HomogeniousPosition = mul(m_WVP, Input.P);
+    Output.Position = mul(m_WV, Input.P);
     Output.UV = Input.tc;
     
     return Output;

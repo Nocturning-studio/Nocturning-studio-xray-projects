@@ -19,9 +19,9 @@ float4 main(Interpolators Input) : COLOR0
 
     calc_alpha_test(Input.UV, Opacity);
 
-    return 1;
+    //return 1;
 	
 	//TODO: Add depth buffer prepass
-	//return Input.Position.z;
+	return Input.Position.z;
 }
 ///////////////////////////////////////////////////////////////////////////////////

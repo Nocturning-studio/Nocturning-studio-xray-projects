@@ -8,14 +8,14 @@
 struct Interpolators
 {
 	float4 HomogeniousPosition : POSITION;
-	float3 Position : TEXCOORD1;
+	float3 Position : TEXCOORD0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main(Interpolators Input) : COLOR0
 {
-    return 1;
+    //return 1;
 	
 	//TODO: Add depth buffer prepass
-	//return Input.Position.z;
+	return Input.Position.z;
 }
 ///////////////////////////////////////////////////////////////////////////////////

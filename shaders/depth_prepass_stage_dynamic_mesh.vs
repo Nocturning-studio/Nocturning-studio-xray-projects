@@ -9,7 +9,7 @@
 struct Interpolators
 {
     float4 HomogeniousPosition : POSITION;
-    float3 Position : TEXCOORD1;
+    float3 Position : TEXCOORD0;
 };
 ////////////////////////////////////////////////////////////////////////////////
 Interpolators _main(v_model Input)
