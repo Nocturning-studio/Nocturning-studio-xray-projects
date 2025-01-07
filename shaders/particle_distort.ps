@@ -34,6 +34,6 @@ PixelShaderOutputStruct main (v2p I)
 	
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4(distort.rgb, factor);
-    Output.Position = PackPositionAndNormal(I.position, NULL);
+    Output.Position = float4(I.position.z, NULL, NULL, NULL);
     return Output;
 }

@@ -26,7 +26,10 @@ struct GBufferPacked
 {
     float4 rt_GBuffer_1 : COLOR0;
     float4 rt_GBuffer_2 : COLOR1;
-    float4 rt_GBuffer_3 : COLOR2;
+    float4 rt_ZBuffer : COLOR2;
+#ifndef DISABLE_SHADING
+    float4 rt_GBuffer_3 : COLOR3;
+#endif
 };
 ////////////////////////////////////////////////////////////////////////////
 float2 PackNormal(float3 norm)
@@ -76,14 +79,13 @@ float CheckDepth(float Depth)
 
 float GetDepth(float2 TexCoords)
 {
-    float Depth = tex2Dlod0(s_gbuffer_2, TexCoords).r;
+    float Depth = tex2Dlod0(s_zbuffer, TexCoords).r;
     return CheckDepth(Depth);
 }
 
 float GetDepthRaw(float2 TexCoords)
 {
-    float Depth = tex2Dlod0(s_gbuffer_2, TexCoords).r;
-    return Depth;
+    return tex2Dlod0(s_zbuffer, TexCoords).r;
 }
 
 float3 GetPosition(float2 TexCoords)
@@ -93,24 +95,18 @@ float3 GetPosition(float2 TexCoords)
 
 float3 GetNormal(float2 TexCoords)
 {
-    return UnpackNormal(tex2Dlod0(s_gbuffer_3, TexCoords).rg);
+    return UnpackNormal(tex2Dlod0(s_gbuffer_2, TexCoords).rg);
 }
 
 void GetPositionAndNormal(in float2 TexCoords, inout float3 Position, inout float3 Normal)
 {
     Position = GetPosition(TexCoords);
-
-    Normal = UnpackNormal(tex2Dlod0(s_gbuffer_3, TexCoords).rg);
+    Normal = GetNormal(TexCoords);
 }
 
 float GetSceneRoughness(float2 TexCoords)
 {
     return tex2Dlod0(s_gbuffer_1, TexCoords).a;
-}
-
-float GetEmission(float2 TexCoords)
-{
-    return tex2D(s_gbuffer_2, TexCoords).b;
 }
 ////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)
@@ -118,9 +114,13 @@ GBufferPacked PackGBuffer(GBuffer Input)
     GBufferPacked GBuffer;
 
     GBuffer.rt_GBuffer_1 = float4(Input.Albedo, Input.Roughness);
-    GBuffer.rt_GBuffer_2 = float4(PackPosition(Input.Position), Input.SubSurfacePower, Input.EmissionPower, NULL);
-    GBuffer.rt_GBuffer_3 = float4(PackNormal(Input.Normal), Input.AO, Input.Metallness);
-
+    GBuffer.rt_GBuffer_2 = float4(PackNormal(Input.Normal), Input.AO, Input.EmissionPower);
+    GBuffer.rt_ZBuffer = float4(PackPosition(Input.Position), NULL, NULL, NULL);
+    
+#ifndef DISABLE_SHADING
+    GBuffer.rt_GBuffer_3 = float4(Input.SubSurfacePower, Input.Metallness, NULL, NULL);
+#endif
+    
     return GBuffer;
 }
 
@@ -128,31 +128,26 @@ GBuffer UnpackGBuffer(float2 TexCoords)
 {
     GBuffer GBuffer;
 
-	float4 GBuffer_1 = tex2D(s_gbuffer_1, TexCoords);
-	float4 GBuffer_2 = tex2D(s_gbuffer_2, TexCoords);
-	float4 GBuffer_3 = tex2D(s_gbuffer_3, TexCoords);
-
+	float4 GBuffer_1 = tex2Dlod0(s_gbuffer_1, TexCoords);
+    float4 GBuffer_2 = tex2Dlod0(s_gbuffer_2, TexCoords);
+    float ZBuffer = tex2Dlod0(s_zbuffer, TexCoords).r;
+    
     GBuffer.Albedo = GBuffer_1.rgb;
     GBuffer.Roughness = GBuffer_1.a;
-    GBuffer.Normal = UnpackNormal(GBuffer_3.rg);
-    GBuffer.Position = UnpackPosition(CheckDepth(GBuffer_2.r), TexCoords);
-    GBuffer.AO = GBuffer_3.b;
+    GBuffer.Normal = UnpackNormal(GBuffer_2.rg);
+    GBuffer.AO = GBuffer_2.b;
+    GBuffer.EmissionPower = GBuffer_2.a;
+    GBuffer.Position = UnpackPosition(CheckDepth(ZBuffer), TexCoords);
     
 #ifndef DISABLE_SHADING
-    GBuffer.Metallness = GBuffer_3.a;
-    GBuffer.SubSurfacePower = GBuffer_2.g;
-    GBuffer.EmissionPower = GBuffer_2.b;
+    float4 GBuffer_3 = tex2Dlod0(s_gbuffer_3, TexCoords);
+    GBuffer.SubSurfacePower = GBuffer_3.r;
+    GBuffer.Metallness = GBuffer_3.g;
 #else
-    GBuffer.Metallness = 0.0f;
     GBuffer.SubSurfacePower = 0.0f;
-    GBuffer.EmissionPower = 0.0f;
+    GBuffer.Metallness = 0.0f;
 #endif
     
     return GBuffer;
-}
-
-float4 PackPositionAndNormal(float3 Position, float3 Normal)
-{
-    return float4(PackNormal(Normal), NULL, PackPosition(Position));
 }
 ////////////////////////////////////////////////////////////////////////////

@@ -42,6 +42,6 @@ PixelShaderOutputStruct main (v2p I)
     Output.Generic_0 = float4(BaseTextureData.rgb, FogOpacity);
     
     calc_alpha_test(I.tc0, BaseTextureData.a);
-    Output.Position = PackPositionAndNormal(I.position, NULL);
+    Output.Position = float4(I.position.z, NULL, NULL, NULL);
     return Output;
 }
