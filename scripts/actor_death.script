@@ -29,7 +29,7 @@ function is_killed()
 	if flag_dead then
 		if time_global()-time>3000 then
 		level.enable_input()
-		level.add_pp_effector("deadcity_wake.ppe", 4467, false)
+		level.add_pp_effector("black.ppe", 4467, false)
 		flag_dead=false
 		flad_circle=true
 		end
@@ -38,7 +38,7 @@ function is_killed()
 	if flad_circle then
 		if time_c<=time_global() then
 		level.remove_pp_effector(4467)
-		level.add_pp_effector("deadcity_wake.ppe", 4467, false)
+		level.add_pp_effector("black.ppe", 4467, false)
 		time_c = time_global() + 500
 		end
 	end
