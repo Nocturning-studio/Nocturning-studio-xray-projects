@@ -164,6 +164,7 @@
     <ClInclude Include="chromatic_abberations.xrh" />
     <ClInclude Include="depth_of_field_common.xrh" />
     <None Include="common_effects.xrh" />
+    <None Include="data_encoding.xrh" />
     <None Include="debug_console.ps" />
     <None Include="debug_console.s" />
     <None Include="depth_prepass_stage_detail_object.ps" />
@@ -351,7 +352,6 @@
     <None Include="wmark.ps" />
     <None Include="wmark.vs" />
     <None Include="yuv2rgb.ps" />
-    <ClInclude Include="zbuffer.xrh" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="accumulation_helper.xrh" />
@@ -369,7 +369,6 @@
     <ClInclude Include="common_uniforms.xrh" />
     <ClInclude Include="contrast_adaptive_sharpening.xrh" />
     <ClInclude Include="displacement.xrh" />
-    <ClInclude Include="filters.xrh" />
     <ClInclude Include="fxaa.xrh" />
     <ClInclude Include="gbuffer.xrh" />
     <ClInclude Include="hashed_alpha.xrh" />

@@ -1,0 +1,33 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 08.01.2025
+//	Author		: LVutner, Deathman
+//  https://nullprogram.com/blog/2014/06/29/
+////////////////////////////////////////////////////////////////////////////
+//Encoding two 8bit values into one 16bit value
+float encode_float2(float2 data)
+{
+    return dot(data, float2(255.0, 255.0 * 255.0)) - 16376.0;
+}
+
+float encode(float x, float y)
+{
+    float2 buffer_to_encode = float2(x, y);
+    return encode_float2(buffer_to_encode);
+}
+
+//Decoding two 8bit values from one 16bit value
+float2 decode_float2(float data)
+{
+    data += 16376.0;
+    float temp = floor(data / 255.0);
+    float x = data - 255.0 * temp;
+    return float2(x, temp) / 255.0;
+}
+
+void decode_buffer(in float buffer, out float x, out float y)
+{
+    float2 decoded_buffer = decode_float2(buffer);
+    x = decoded_buffer.x;
+    y = decoded_buffer.y;
+}
+////////////////////////////////////////////////////////////////////////////

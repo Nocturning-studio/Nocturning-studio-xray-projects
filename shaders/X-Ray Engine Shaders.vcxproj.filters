@@ -40,9 +40,6 @@
     <ClInclude Include="common_uniforms.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="filters.xrh">
-      <Filter>Helpers\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="shadow_filtering.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
     </ClInclude>
@@ -69,9 +66,6 @@
     </ClInclude>
     <ClInclude Include="common_math.xrh">
       <Filter>Helpers\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="zbuffer.xrh">
-      <Filter>Helpers\Misc</Filter>
     </ClInclude>
     <ClInclude Include="skinning.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
@@ -713,6 +707,9 @@
     </None>
     <None Include="shadow_depth_stage_static_mesh_alphatest.vs">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Shadow depth stage\Static mesh</Filter>
+    </None>
+    <None Include="data_encoding.xrh">
+      <Filter>Helpers\Misc</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
