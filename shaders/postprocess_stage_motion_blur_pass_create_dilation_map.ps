@@ -13,7 +13,7 @@ uniform float m_blur_power;
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
 {
-    float MotionBlurPower = clamp(m_blur_power, 0.0f, 0.01f);
+    float MotionBlurPower = clamp(m_blur_power, 0.0f, 0.025f);
 
     float4 CurrentPosition = float4(GetPosition(TexCoords), 1.0f);
     float4 p_current = mul(m_current, CurrentPosition);
