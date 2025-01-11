@@ -10,47 +10,34 @@ uniform sampler2D s_previous_image;
 uniform float4x4 m_current;
 uniform float4x4 m_previous;
 uniform float m_blur_power;
+uniform sampler2D s_dilation_map;
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    float MotionBlurPower = clamp (m_blur_power, 0.0f, 0.03f);
+    //float MotionBlurPower = clamp (m_blur_power, 0.0f, 1.0f);
 
-	//float4 CurrentImageColor = tex2Dlod0 (s_image, TexCoords) * (1.0f - MotionBlurPower);
-	//float4 PreviousImageColor = tex2Dlod0 (s_previous_image, TexCoords) * MotionBlurPower;
+    //float4 CurrentPosition = float4(GetPosition(TexCoords), 1.0f);
+    //float PreviousDepth = tex2Dlod0(s_previous_image, TexCoords).a;
+    //float4 PreviousPosition = float4(UnpackPosition(PreviousDepth, TexCoords), 1.0f);
 
-    //return CurrentImageColor + PreviousImageColor;
-    float CurrentDepth = GetDepth(TexCoords);
-    float PreviousDepth = tex2Dlod0(s_previous_image, TexCoords).r;
-    float3 CurrentPosition = UnpackPosition(CurrentDepth, TexCoords);
-    float3 PreviousPosition = UnpackPosition(PreviousDepth, TexCoords);
-    float4 Currentpos4 = float4(CurrentPosition, 1.0f);
-    float4 Previouspos4 = float4(PreviousPosition, 1.0f);
-
-    float4 p_current = mul(m_current, Currentpos4);
-    float4 p_previous = mul(m_previous, Currentpos4);
-    float2 p_velocity = MotionBlurPower * ((p_previous.xy / p_previous.w) - (p_current.xy / p_current.w));
+    //float4 p_current = mul(m_current, CurrentPosition);
+    //float4 p_previous = mul(m_previous, PreviousPosition);
+    //float2 p_velocity = MotionBlurPower * ((p_previous.xy / p_previous.w) - (p_current.xy / p_current.w));
+    float2 p_velocity = tex2Dlod0(s_dilation_map, TexCoords);
     p_velocity = clamp(p_velocity, -0.001f, +0.001f);
 
 	// For each sample, sum up each sample's color in "Blurred" and then divide
 	// to average the color after all the samples are added.
-    float3 blurred = tex2Dlod0(s_image, TexCoords).rgb;
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 1.0f + TexCoords).rgb;
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 2.0f + TexCoords).rgb;
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 3.0f + TexCoords).rgb;
-    return float4(blurred * 0.25f, NULL);
-    /*
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 1.0f + TexCoords).rgb;
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 2.0f + TexCoords).rgb;
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 3.0f + TexCoords).rgb;
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 4.0f + TexCoords).rgb;
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 5.0f + TexCoords).rgb;
-    blurred += tex2Dlod0(s_previous_image, p_velocity * 6.0f + TexCoords).rgb;
-    //blurred += tex2Dlod0(s_previous_image, p_velocity * 7.0f + TexCoords).rgb;
-    //blurred += tex2Dlod0(s_previous_image, p_velocity * 8.0f + TexCoords).rgb;
-    //blurred += tex2Dlod0(s_previous_image, p_velocity * 9.0f + TexCoords).rgb;
-    //blurred += tex2Dlod0(s_previous_image, p_velocity * 10.0f + TexCoords).rgb;
-    //blurred += tex2Dlod0(s_previous_image, p_velocity * 11.0f + TexCoords).rgb;
-    return float4(blurred / 8.0f, NULL);
-*/
+    float3 blurred = NULL;
+    
+    blurred += tex2Dlod0(s_image, TexCoords).rgb;
+    
+    for (int i = 1; i < 16; i++)
+    {
+        blurred += tex2Dlod0(s_image, p_velocity * float(i) + TexCoords).rgb;
+    }
+    
+    float3 result = blurred / 16;
+    return float4(result, NULL);
 }
 ///////////////////////////////////////////////////////////////////////////////////

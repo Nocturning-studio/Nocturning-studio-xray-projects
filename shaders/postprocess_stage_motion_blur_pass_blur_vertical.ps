@@ -1,0 +1,35 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 21.12.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+///////////////////////////////////////////////////////////////////////////////////
+uniform sampler2D s_dilation_map;
+uniform sampler2D s_previous_image;
+///////////////////////////////////////////////////////////////////////////////////
+float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
+{
+    float2 RaySize = screen_res.zw;
+    float3 SummaryImageColor = NULL;
+    float Contribution = 0.0f;
+        
+    [unroll]
+    for (int i = -12 / 2; i < 12 / 2; i++)
+    {
+        float2 DilationSampleCoords = TexCoords + float2(0, i) * RaySize;
+        float2 DilationMap = tex2Dlod0(s_dilation_map, DilationSampleCoords).rg;
+        float SampleContribution = DilationMap.y;
+            
+        float2 SampleCoords = float2(0, DilationMap.y * i) + TexCoords;
+            
+        float3 SampleColor = tex2Dlod0(s_previous_image, SampleCoords).rgb;
+        
+        SummaryImageColor += SampleColor * SampleContribution;
+        
+        Contribution += SampleContribution;
+    }
+    
+    return float4((SummaryImageColor / Contribution), 1.0f);
+}
+///////////////////////////////////////////////////////////////////////////////////

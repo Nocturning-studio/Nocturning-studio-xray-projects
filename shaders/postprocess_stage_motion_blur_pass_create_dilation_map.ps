@@ -1,0 +1,28 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 05.11.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "gbuffer.xrh"
+///////////////////////////////////////////////////////////////////////////////////
+uniform sampler2D s_previous_image;
+uniform float4x4 m_current;
+uniform float4x4 m_previous;
+uniform float m_blur_power;
+///////////////////////////////////////////////////////////////////////////////////
+float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
+{
+    float MotionBlurPower = clamp(m_blur_power, 0.0f, 0.01f);
+
+    float4 CurrentPosition = float4(GetPosition(TexCoords), 1.0f);
+    float PreviousDepth = tex2Dlod0(s_previous_image, TexCoords).a;
+    float4 PreviousPosition = float4(UnpackPosition(PreviousDepth, TexCoords), 1.0f);
+
+    float4 p_current = mul(m_current, CurrentPosition);
+    float4 p_previous = mul(m_previous, PreviousPosition);
+    float2 p_velocity = MotionBlurPower * ((p_previous.xy / p_previous.w) - (p_current.xy / p_current.w));
+    
+    return float4(p_velocity, NULL, NULL);
+}
+///////////////////////////////////////////////////////////////////////////////////
