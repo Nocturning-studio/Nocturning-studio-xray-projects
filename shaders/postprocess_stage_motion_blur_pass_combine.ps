@@ -6,6 +6,8 @@
 #include "common.xrh"
 #include "gbuffer.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
+#define SAMPLES_COUNT 16
+///////////////////////////////////////////////////////////////////////////////////
 uniform sampler2D s_previous_image;
 uniform float4x4 m_current;
 uniform float4x4 m_previous;
@@ -14,30 +16,20 @@ uniform sampler2D s_dilation_map;
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    //float MotionBlurPower = clamp (m_blur_power, 0.0f, 1.0f);
+    float2 DilationMap = tex2Dlod0(s_dilation_map, TexCoords);
+    DilationMap = clamp(DilationMap, -0.001f, +0.001f);
 
-    //float4 CurrentPosition = float4(GetPosition(TexCoords), 1.0f);
-    //float PreviousDepth = tex2Dlod0(s_previous_image, TexCoords).a;
-    //float4 PreviousPosition = float4(UnpackPosition(PreviousDepth, TexCoords), 1.0f);
-
-    //float4 p_current = mul(m_current, CurrentPosition);
-    //float4 p_previous = mul(m_previous, PreviousPosition);
-    //float2 p_velocity = MotionBlurPower * ((p_previous.xy / p_previous.w) - (p_current.xy / p_current.w));
-    float2 p_velocity = tex2Dlod0(s_dilation_map, TexCoords);
-    p_velocity = clamp(p_velocity, -0.001f, +0.001f);
-
-	// For each sample, sum up each sample's color in "Blurred" and then divide
-	// to average the color after all the samples are added.
     float3 blurred = NULL;
     
     blurred += tex2Dlod0(s_image, TexCoords).rgb;
     
-    for (int i = 1; i < 16; i++)
+    for (int i = 1; i < SAMPLES_COUNT; i++)
     {
-        blurred += tex2Dlod0(s_image, p_velocity * float(i) + TexCoords).rgb;
+        blurred += tex2Dlod0(s_image, DilationMap * float(i) + TexCoords).rgb;
     }
     
-    float3 result = blurred / 16;
-    return float4(result, NULL);
+    blurred /= SAMPLES_COUNT;
+    
+    return float4(blurred, NULL);
 }
 ///////////////////////////////////////////////////////////////////////////////////

@@ -20,9 +20,15 @@ float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
     float4 PreviousPosition = float4(UnpackPosition(PreviousDepth, TexCoords), 1.0f);
 
     float4 p_current = mul(m_current, CurrentPosition);
-    float4 p_previous = mul(m_previous, PreviousPosition);
-    float2 p_velocity = MotionBlurPower * ((p_previous.xy / p_previous.w) - (p_current.xy / p_current.w));
+    p_current.xy /= p_current.w;
     
-    return float4(p_velocity, NULL, NULL);
+    float4 p_previous = mul(m_previous, PreviousPosition);
+    p_previous.xy /= p_previous.w;
+    
+    float2 DilationMap = p_previous.xy - p_current.xy;
+    
+    DilationMap *= MotionBlurPower;
+    
+    return float4(DilationMap, NULL, NULL);
 }
 ///////////////////////////////////////////////////////////////////////////////////
