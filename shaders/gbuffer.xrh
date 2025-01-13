@@ -8,7 +8,7 @@
 uniform sampler2D s_gbuffer_1;
 uniform sampler2D s_gbuffer_2;
 uniform sampler2D s_gbuffer_3;
-uniform sampler2D s_zbuffer;
+uniform sampler2D s_gbuffer_4;
 ////////////////////////////////////////////////////////////////////////////
 struct GBuffer
 {
@@ -27,9 +27,9 @@ struct GBufferPacked
 {
     float4 rt_GBuffer_1 : COLOR0;
     float4 rt_GBuffer_2 : COLOR1;
-    float4 rt_ZBuffer : COLOR2;
+    float4 rt_GBuffer_3 : COLOR2;
 #ifndef DISABLE_SHADING
-    float4 rt_GBuffer_3 : COLOR3;
+    float4 rt_GBuffer_4 : COLOR3;
 #endif
 };
 ////////////////////////////////////////////////////////////////////////////
@@ -80,13 +80,13 @@ float CheckDepth(float Depth)
 
 float GetDepth(float2 TexCoords)
 {
-    float Depth = tex2Dlod0(s_zbuffer, TexCoords).r;
+    float Depth = tex2Dlod0(s_gbuffer_3, TexCoords).r;
     return CheckDepth(Depth);
 }
 
 float GetDepthRaw(float2 TexCoords)
 {
-    return tex2Dlod0(s_zbuffer, TexCoords).r;
+    return tex2Dlod0(s_gbuffer_3, TexCoords).r;
 }
 
 float3 GetPosition(float2 TexCoords)
@@ -96,7 +96,12 @@ float3 GetPosition(float2 TexCoords)
 
 float3 GetNormal(float2 TexCoords)
 {
+#ifndef DISABLE_SHADING
+    return UnpackNormal(tex2Dlod0(s_gbuffer_3, TexCoords).gb);
+#else
     return UnpackNormal(tex2Dlod0(s_gbuffer_2, TexCoords).rg);
+#endif
+
 }
 
 void GetPositionAndNormal(in float2 TexCoords, inout float3 Position, inout float3 Normal)
@@ -112,7 +117,11 @@ float GetRoughness(float2 TexCoords)
 
 float GetMaterialID(float2 TexCoords)
 {
-    return tex2Dlod0(s_gbuffer_3, TexCoords).b;
+#ifndef DISABLE_SHADING
+    return tex2Dlod0(s_gbuffer_4, TexCoords).b;
+#else
+    return NULL;
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)
@@ -120,11 +129,14 @@ GBufferPacked PackGBuffer(GBuffer Input)
     GBufferPacked GBuffer;
 
     GBuffer.rt_GBuffer_1 = float4(Input.Albedo, Input.Roughness);
-    GBuffer.rt_GBuffer_2 = float4(PackNormal(Input.Normal), Input.AO, Input.EmissionPower);
-    GBuffer.rt_ZBuffer = float4(PackPosition(Input.Position), NULL, NULL, NULL);
     
 #ifndef DISABLE_SHADING
-    GBuffer.rt_GBuffer_3 = float4(Input.SubSurfacePower, Input.Metallness, Input.MaterialID, NULL);
+    GBuffer.rt_GBuffer_2 = float4(NULL, NULL, NULL, Input.EmissionPower);
+    GBuffer.rt_GBuffer_3 = float4(PackPosition(Input.Position), PackNormal(Input.Normal), Input.AO);
+    GBuffer.rt_GBuffer_4 = float4(Input.SubSurfacePower, Input.Metallness, Input.MaterialID, NULL);
+#else
+    GBuffer.rt_GBuffer_2 = float4(PackNormal(Input.Normal), Input.AO, Input.EmissionPower);
+    GBuffer.rt_GBuffer_3 = float4(PackPosition(Input.Position), NULL, NULL, NULL);
 #endif
     
     return GBuffer;
@@ -136,24 +148,29 @@ GBuffer UnpackGBuffer(float2 TexCoords)
 
 	float4 GBuffer_1 = tex2Dlod0(s_gbuffer_1, TexCoords);
     float4 GBuffer_2 = tex2Dlod0(s_gbuffer_2, TexCoords);
-    float ZBuffer = tex2Dlod0(s_zbuffer, TexCoords).r;
+    float4 GBuffer_3 = tex2Dlod0(s_gbuffer_3, TexCoords);
+    
+#ifndef DISABLE_SHADING
+    float4 GBuffer_4 = tex2Dlod0(s_gbuffer_4, TexCoords);
+#endif
     
     GBuffer.Albedo = GBuffer_1.rgb;
     GBuffer.Roughness = GBuffer_1.a;
-    GBuffer.Normal = UnpackNormal(GBuffer_2.rg);
-    GBuffer.AO = GBuffer_2.b;
     GBuffer.EmissionPower = GBuffer_2.a;
-    GBuffer.Position = UnpackPosition(CheckDepth(ZBuffer), TexCoords);
+    GBuffer.Position = UnpackPosition(CheckDepth(GBuffer_3.r), TexCoords);
     
 #ifndef DISABLE_SHADING
-    float4 GBuffer_3 = tex2Dlod0(s_gbuffer_3, TexCoords);
-    GBuffer.SubSurfacePower = GBuffer_3.r;
-    GBuffer.Metallness = GBuffer_3.g;
-    GBuffer.MaterialID = GBuffer_3.b;
+    GBuffer.AO = GBuffer_3.a;
+    GBuffer.SubSurfacePower = GBuffer_4.r;
+    GBuffer.Metallness = GBuffer_4.g;
+    GBuffer.MaterialID = GBuffer_4.b;
+    GBuffer.Normal = UnpackNormal(GBuffer_3.gb);
 #else
+    GBuffer.AO = GBuffer_2.b;
     GBuffer.SubSurfacePower = 0.0f;
     GBuffer.Metallness = 0.0f;
     GBuffer.MaterialID = 0.0f;
+    GBuffer.Normal = UnpackNormal(GBuffer_2.rg);
 #endif
     
     return GBuffer;
