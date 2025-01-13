@@ -41,7 +41,7 @@ float4 main (Interpolators Input): COLOR0
 
     // Weapon shadowing
     float NdotL = abs(dot(normalize(GBuffer.Normal), Ldynamic_dir.rgb));
-    if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
+    if ((NdotL * ShadowMap > 0.1f) && (GBuffer.MaterialID == HUD_MATERIAL))
         ShadowMap *= TraceShadow(Ldynamic_dir.xyz, Position.xyz);
 
     float3 SunColor = Ldynamic_color.rgb;

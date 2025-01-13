@@ -91,4 +91,6 @@ uniform float3 sun_color;
 
 uniform float4 ambient_color;
 uniform float ao_brightness;
+
+uniform float is_hud_render_phase;
 ////////////////////////////////////////////////////////////////////////////

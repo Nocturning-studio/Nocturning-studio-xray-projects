@@ -30,7 +30,7 @@ float4 main (Interpolators Input): COLOR0
     float ShadowMap = get_shadow_map (ShadowMapTexCoords);
     
     float NdotL = abs(dot(normalize(GBuffer.Normal), LightDirection.rgb));
-    if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
+    if ((NdotL * ShadowMap > 0.1f) && (GBuffer.MaterialID == HUD_MATERIAL))
         ShadowMap *= TraceShadow(LightDirection, Position.xyz);
     
  #ifndef DISABLE_SHADING

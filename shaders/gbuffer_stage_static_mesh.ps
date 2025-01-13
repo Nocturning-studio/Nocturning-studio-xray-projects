@@ -35,7 +35,7 @@ GBufferPacked main (Interpolators Input)
 	calc_alpha_test(Input.UV, Material.Opacity);
 #endif
 
-    GBuffer.Albedo = Material.Albedo;
+	GBuffer.Albedo = Material.Albedo;
 
     GBuffer.Normal = normalize (mul (TBN, Material.Normal)).rgb;
 	
@@ -57,6 +57,11 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.EmissionPower = Material.EmissionPower;
 
+    if (is_hud_render_phase == 1)
+		GBuffer.MaterialID = HUD_MATERIAL;
+	else
+        GBuffer.MaterialID = NORMAL_MATERIAL;
+		
     return PackGBuffer (GBuffer);
 }
 ///////////////////////////////////////////////////////////////////////////////////
