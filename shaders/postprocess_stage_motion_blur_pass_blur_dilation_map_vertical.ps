@@ -5,19 +5,21 @@
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
+#define SAMPLES_COUNT 4
+///////////////////////////////////////////////////////////////////////////////////
 uniform sampler2D s_dilation_map;
+uniform float4 image_resolution;
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
 {
     float2 Result = NULL;
     
-    for (int i = 0; i < 8; i++)
+    for (int i = -SAMPLES_COUNT / 2; i < SAMPLES_COUNT / 2; i++)
     {
-        for (int j; j < 8; j++)
-        {
-            Result += tex2Dlod0(s_dilation_map, float2(i, j) * (0.05f / screen_res.xy) + TexCoords).rg;
-        }
+        Result += tex2Dlod0(s_dilation_map, float2(0, i) * image_resolution.zw + TexCoords).rg;
     }
+    
+    Result /= SAMPLES_COUNT;
     
     return float4(Result, NULL, NULL);
 }

@@ -279,6 +279,11 @@
     <None Include="portal.ps" />
     <None Include="portal.s" />
     <None Include="portal.vs" />
+    <None Include="postprocess_stage_motion_blur_pass_blur_dilation_map_horizontal.ps" />
+    <None Include="postprocess_stage_motion_blur_pass_blur_dilation_map_vertical.ps" />
+    <None Include="postprocess_stage_motion_blur_pass_blur_horizontal.ps" />
+    <None Include="postprocess_stage_motion_blur_pass_blur_vertical.ps" />
+    <None Include="postprocess_stage_motion_blur_pass_create_dilation_map.ps" />
     <None Include="postprocess_stage_pass_combine_effectors.ps" />
     <None Include="postprocess_stage_antialiasing_pass_fxaa.ps" />
     <None Include="postprocess_stage_autoexposure_pass_downsampling_step_1.ps" />
@@ -299,8 +304,8 @@
     <None Include="postprocess_stage_distortion.ps" />
     <None Include="postprocess_stage_fog_scattering_pass_horizontal_filter.ps" />
     <None Include="postprocess_stage_fog_scattering_pass_vertical_filter.ps" />
-    <None Include="postprocess_stage_motion_blur_pass_combine.ps" />
-    <None Include="postprocess_stage_motion_blur_pass_save_frame.ps" />
+    <None Include="postprocess_stage_motion_blur_pass_blur.ps" />
+    <None Include="postprocess_stage_motion_blur_pass_save_depth.ps" />
     <None Include="postprocess_stage_pass_night_vision.ps" />
     <None Include="postprocess_stage_pass_radiation.ps" />
     <None Include="postprocess_stage_pass_lut.ps" />

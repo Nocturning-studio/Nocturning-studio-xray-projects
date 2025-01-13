@@ -189,10 +189,10 @@
     <None Include="postprocess_stage_depth_of_field_pass_vertical_filter.ps">
       <Filter>Postprocess\Depth of field</Filter>
     </None>
-    <None Include="postprocess_stage_motion_blur_pass_combine.ps">
+    <None Include="postprocess_stage_motion_blur_pass_blur.ps">
       <Filter>Postprocess\Motion blur</Filter>
     </None>
-    <None Include="postprocess_stage_motion_blur_pass_save_frame.ps">
+    <None Include="postprocess_stage_motion_blur_pass_save_depth.ps">
       <Filter>Postprocess\Motion blur</Filter>
     </None>
     <None Include="postprocess_stage_bloom_prepare.ps">
@@ -710,6 +710,21 @@
     </None>
     <None Include="data_encoding.xrh">
       <Filter>Helpers\Misc</Filter>
+    </None>
+    <None Include="postprocess_stage_motion_blur_pass_create_dilation_map.ps">
+      <Filter>Postprocess\Motion blur</Filter>
+    </None>
+    <None Include="postprocess_stage_motion_blur_pass_blur_dilation_map_vertical.ps">
+      <Filter>Postprocess\Motion blur</Filter>
+    </None>
+    <None Include="postprocess_stage_motion_blur_pass_blur_dilation_map_horizontal.ps">
+      <Filter>Postprocess\Motion blur</Filter>
+    </None>
+    <None Include="postprocess_stage_motion_blur_pass_blur_vertical.ps">
+      <Filter>Postprocess\Motion blur</Filter>
+    </None>
+    <None Include="postprocess_stage_motion_blur_pass_blur_horizontal.ps">
+      <Filter>Postprocess\Motion blur</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
