@@ -121,7 +121,7 @@ float2 CalculateParallaxMapping(float3 Position, float3 ViewVector, float2 UV,
         height += constant_parallax_scale.y;
 
         float fParallaxFade = smoothstep(StopFadingDistance, StartFadingDistance, Position.z);
-        UV += height * ViewVector * fParallaxFade;
+        UV += height * ViewVector.xy * fParallaxFade;
     }
 
     return UV;
@@ -208,15 +208,15 @@ float2 GetDisplacement(float3 Position, float3 ViewVector, float2 UV, int Materi
 
 float2 GetDetailDisplacement(float3 Position, float3 ViewVector, float2 UV, int MaterialType)
 {
-//#if defined(USE_PARALLAX_OCCLUSION_MAPPING)
-//    UV = CalculateParallaxOcclusionMapping(Position, ViewVector, UV, DETAIL_STEEP_PARALLAX_START_FADE,
-//                                           DETAIL_STEEP_PARALLAX_STOP_FADE, DETAIL_STEEP_PARALLAX_MIN_SAMPLES,
-//                                           DETAIL_STEEP_PARALLAX_MAX_SAMPLES, MaterialType);
-//#elif defined(USE_PARALLAX_MAPPING)
+#if defined(USE_PARALLAX_OCCLUSION_MAPPING)
+    UV = CalculateParallaxOcclusionMapping(Position, ViewVector, UV, DETAIL_STEEP_PARALLAX_START_FADE,
+                                           DETAIL_STEEP_PARALLAX_STOP_FADE, DETAIL_STEEP_PARALLAX_MIN_SAMPLES,
+                                           DETAIL_STEEP_PARALLAX_MAX_SAMPLES, MaterialType);
+#elif defined(USE_PARALLAX_MAPPING)
     UV = CalculateParallaxMapping(Position, ViewVector, UV,
                                   DETAIL_PARALLAX_START_FADE, 
                                   DETAIL_PARALLAX_STOP_FADE, MaterialType);
-//#endif
+#endif
 
     return UV;
 }
