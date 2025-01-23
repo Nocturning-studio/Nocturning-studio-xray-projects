@@ -35,8 +35,9 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 {
     float3 P, N;
     GetPositionAndNormal (TexCoords, P, N);
+    float MaterialID = GetMaterialID(TexCoords);
     
-    if (P.z > SSAO_RENDER_DISTANCE)
+    if (P.z > SSAO_RENDER_DISTANCE || isHUD(MaterialID))
     {
         return float4 (1.0f, 1.0f, 1.0f, 1.0f);
     }
@@ -90,12 +91,16 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
             float4 sample_proj = calc_proj (position_tap);
             float2 sample_tap = projection_to_screen (sample_proj);
 
-            float hit = GetPosition (sample_tap).z;
+            MaterialID = GetMaterialID(TexCoords);
+            if (!isHUD(MaterialID))
+            {
+                float hit = GetPosition(sample_tap).z;
 
-            float error = position_tap.z - hit;
+                float error = position_tap.z - hit;
 
-            if (error >= 0 && error <= 1)
-                occ += 1 - error * error;
+                if (error >= 0 && error <= 1)
+                    occ += 1 - error * error;
+            }
         }
 
         occ = pow (1 - occ / SSAO_SAMPLES, SSAO_POWER);

@@ -14,12 +14,62 @@
 #define STEPS 4
 #define RENDER_DISTANCE 75.0f
 //////////////////////////////////////////////////////////////////////////////////////////
+float GetAO(float2 TexCoords, float3 CenterPixelNormal, float3 CenterPixelPosition, float negInvR2)
+{
+    float MaterialID = GetMaterialID(TexCoords);
+                        
+    if (isHUD(MaterialID))
+    {
+        return NULL;
+    }
+                        
+    float3 posHit = GetPosition(TexCoords);
+    posHit.z += BIAS;
+                        
+    // pos    = view-space position at the kernel center
+	// norm   = view-space normal at the kernel center
+	// posHit = view-space position of the current sample
+    float3 V = CenterPixelPosition - posHit;
+    float VdotV = dot(V, V);
+    float NdotV = dot(CenterPixelNormal, -V) * rsqrt(VdotV);
+
+	// Use saturate(x) instead of max(x,0.f) because that is faster
+    float falloff = saturate(VdotV * negInvR2 + 1.0f);
+    float occluder = saturate(NdotV);
+                        
+#if USE_INDIRECT
+	if(occluder < 0.05f)
+		continue;
+
+	float3 indirectDir = normalize(V);
+
+	float3 normHit = GetNormal(tcHit);
+
+	float indirectIrradiance = saturate(dot(indirectDir, normHit)) * occluder;
+			
+	float3 indirectColor = tex2Dlod0(s_gbuffer_1, tcHit).rgb;//BackBuffer(tcHit);
+	float3 light = indirectColor * indirectIrradiance * 1.0f;//LightIntensity;
+
+    float3 reflectedColor = tex2Dlod0(s_ao, tcHit).rgb * 0.99;
+    float3 reflectedDir = normalize(reflect(indirectDir, Normal));
+
+	float reflectedIrradiance = saturate(dot(reflectedDir, normHit));
+
+	light += reflectedColor * reflectedIrradiance * 1.0f;//ReflectedIntensity;
+			
+	dirSum.xyz += light * falloff;
+#endif
+                        
+    return occluder * falloff;
+}
+//////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
 {
     float3 Position, Normal;
     GetPositionAndNormal (TexCoords, Position, Normal);
+    float MaterialID = GetMaterialID(TexCoords);
     
-    if (Position.z > RENDER_DISTANCE)
+    if ((Position.z > RENDER_DISTANCE) || isHUD(MaterialID))
     {
         return float4 (1.0f, 1.0f, 1.0f, 1.0f);
     }
@@ -71,47 +121,10 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
                     float2 tcHit = TexCoords + tcDelta;
 			
                     rayPixels += stepSizePixels;
-
+                    
                     if ((tcHit.x <= 1.0f && tcHit.y <= 1.0f && tcHit.x >= 0.0f && tcHit.y >= 0.0f))
                     {
-                        float3 posHit = GetPosition (tcHit);
-                        posHit.z += BIAS;
-                        
-					    // pos    = view-space position at the kernel center
-					    // norm   = view-space normal at the kernel center
-					    // posHit = view-space position of the current sample
-                        float3 V = Position - posHit;
-                        float VdotV = dot (V, V);
-                        float NdotV = dot (Normal, -V) * rsqrt (VdotV);
-
-					    // Use saturate(x) instead of max(x,0.f) because that is faster
-                        float falloff = saturate (VdotV * negInvR2 + 1.0f);
-                        float occluder = saturate (NdotV);
-                        
-#if USE_INDIRECT
-			            if(occluder < 0.05f)
-				            continue;
-
-			            float3 indirectDir = normalize(V);
-
-			            float3 normHit = GetNormal(tcHit);
-
-			            float indirectIrradiance = saturate(dot(indirectDir, normHit)) * occluder;
-			
-			            float3 indirectColor = tex2Dlod0(s_gbuffer_1, tcHit).rgb;//BackBuffer(tcHit);
-			            float3 light = indirectColor * indirectIrradiance * 1.0f;//LightIntensity;
-
-                        float3 reflectedColor = tex2Dlod0(s_ao, tcHit).rgb * 0.99;
-                        float3 reflectedDir = normalize(reflect(indirectDir, Normal));
-
-			            float reflectedIrradiance = saturate(dot(reflectedDir, normHit));
-
-			            light += reflectedColor * reflectedIrradiance * 1.0f;//ReflectedIntensity;
-			
-			            dirSum.xyz += light * falloff;
-#endif
-                        
-                        dirSum += occluder * falloff;
+                        dirSum += GetAO(tcHit, Normal, Position, negInvR2);
                     }
                 }
 		
