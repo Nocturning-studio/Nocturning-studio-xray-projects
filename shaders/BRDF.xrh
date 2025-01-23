@@ -208,7 +208,7 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
 {
     LightComponents Light;
 
-    Roughness = Roughness + 0.015f;
+    Roughness = clamp(Roughness, 0.015f, 1.0f);
     Normal = normalize(Normal);
     LightDirection = -normalize(LightDirection);
     float3 ViewDirection = -normalize(Point);
@@ -229,14 +229,14 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     float3 kD = (1.0f - kS) * (1.0f - Metallness);
 
     // Cook-Torrance specular model
-    float D = D_GGX(RoughnessSqr2, NdotH) * NdotH / (4.0f * HdotV);
-    float V = Vis_SmithJoint(RoughnessSqr, NdotV, saturate(NdotL)) * saturate(NdotL) * (4.0f * HdotV / NdotH);
+    float D = D_GGX(RoughnessSqr2, NdotH) * NdotH / (4.0f * HdotV) * NdotL;
+    float V = Vis_SmithJoint(RoughnessSqr, NdotV, saturate(NdotL));
     Light.Specular = D * V * kS;
     
 #if DISABLE_SHADING
-    Light.Diffuse = Albedo * NdotL * kD / PI * 2.0f;
+    Light.Diffuse = Albedo * NdotL * kD / PI;
 #else
-    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo * kD / PI * 2.0f;
+    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo * kD;
 #endif
 
     // Fake effect of the light going through the thin foliage
@@ -297,9 +297,9 @@ LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallne
     float LdotH = dot(LightDirection, HalfWayDirection);
     
 #if DISABLE_SHADING
-    Light.Diffuse = Albedo * NdotL / PI * 2.0f;
+    Light.Diffuse = Albedo * NdotL;
 #else
-    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo / PI * 2.0f;
+    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo;
 #endif
 
     Light.Specular = NULL;
